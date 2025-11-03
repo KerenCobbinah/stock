@@ -15,15 +15,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if ($id > 0) {
         $stmt = $conn->prepare("UPDATE UniformItems 
-    SET ItemName=?, Size=?, Gender=?, Class=?, Price=?, SupplierID=? 
-    WHERE ItemID=?");
-$stmt->bind_param("ssssddi", $name, $size, $gender, $class, $price, $supplier, $id);
-
+            SET ItemName=?, Size=?, Gender=?, Class=?, Price=?, SupplierID=? 
+            WHERE ItemID=?");
+        $stmt->bind_param("ssssddi", $name, $size, $gender, $class, $price, $supplier, $id);
     } else {
-$stmt = $conn->prepare("INSERT INTO UniformItems (ItemName, Size, Gender, Class, Price, SupplierID) 
-    VALUES (?,?,?,?,?,?)");
-$stmt->bind_param("ssssdi", $name, $size, $gender, $class, $price, $supplier);
-
+        $stmt = $conn->prepare("INSERT INTO UniformItems (ItemName, Size, Gender, Class, Price, SupplierID) 
+            VALUES (?,?,?,?,?,?)");
+        $stmt->bind_param("ssssdi", $name, $size, $gender, $class, $price, $supplier);
     }
     $stmt->execute();
     $stmt->close();
@@ -44,7 +42,6 @@ if (isset($_GET['delete'])) {
         header("Location: uniformitems.php?msg=deleted");
         exit;
     } catch (mysqli_sql_exception $e) {
-        // If the error is a foreign key issue
         if (strpos($e->getMessage(), 'foreign key constraint fails') !== false) {
             echo "
             <div class='container mt-5'>
@@ -57,11 +54,10 @@ if (isset($_GET['delete'])) {
             include __DIR__ . '/../includes/footer.php';
             exit;
         } else {
-            throw $e; // rethrow if it's another SQL error
+            throw $e;
         }
     }
 }
-
 
 // --- EDIT MODE ---
 $editItem = null;
@@ -83,6 +79,66 @@ $items = $conn->query("SELECT u.*, s.SupplierName
 // Fetch suppliers
 $suppliers = $conn->query("SELECT SupplierID, SupplierName FROM Suppliers ORDER BY SupplierName");
 ?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Uniform Items</title>
+<style>
+body {
+  background: linear-gradient(135deg, #fac992ff, #fbe7bbff);
+  color: #333;
+  font-family: "Poppins", sans-serif;
+  overflow-x: hidden; /* prevents page-wide side scroll */
+}
+
+h3 {
+  color: #000;
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+}
+
+/* Table responsiveness fix */
+.table-container {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  width: 100%;
+}
+
+.table th {
+  background-color: #da9236ff !important;
+  color: #fff !important;
+  text-align: center;
+  position: sticky;
+  top: 0;
+  z-index: 2;
+}
+
+.table-hover tbody tr:hover {
+  background-color: #e4cf88ff;
+}
+
+.form-control, .form-select {
+  border-radius: 10px;
+  padding: 10px;
+}
+
+.btn {
+  border-radius: 10px;
+  font-weight: 500;
+}
+
+#searchInput {
+  border-radius: 20px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+#searchInput:focus {
+  box-shadow: 0 0 8px rgba(135, 87, 15, 0.84);
+}
+</style>
+</head>
+<body>
 
 <div class="container py-4">
   <div class="d-flex justify-content-between align-items-center mb-3">
@@ -115,15 +171,15 @@ $suppliers = $conn->query("SELECT SupplierID, SupplierName FROM Suppliers ORDER 
             </select>
           </div>
           <div class="col-md-2">
-  <select name="Class" class="form-select" required>
-    <option value="">-- Class --</option>
-    <option value="JHS " <?= ($editItem['Class'] ?? '') === 'JHS 1' ? 'selected' : '' ?>>JHS</option>
-    <option value="LOWER PRIMARY" <?= ($editItem['Class'] ?? '') === 'JHS 2' ? 'selected' : '' ?>>LOWER PRIMARY</option>
-    <option value="UPPER PRIMARY" <?= ($editItem['Class'] ?? '') === 'JHS 3' ? 'selected' : '' ?>>UPPER PRIMARY</option>
-    <option value="NURSERY" <?= ($editItem['Class'] ?? '') === 'NURSERY' ? 'selected' : '' ?>>NURSERY</option>
-    <option value="CRECHE" <?= ($editItem['Class'] ?? '') === 'CRECHE' ? 'selected' : '' ?>>CRECHE</option>
-</div>
-
+            <select name="Class" class="form-select" required>
+              <option value="">-- Class --</option>
+              <option value="JHS" <?= ($editItem['Class'] ?? '') === 'JHS' ? 'selected' : '' ?>>JHS</option>
+              <option value="LOWER PRIMARY" <?= ($editItem['Class'] ?? '') === 'LOWER PRIMARY' ? 'selected' : '' ?>>LOWER PRIMARY</option>
+              <option value="UPPER PRIMARY" <?= ($editItem['Class'] ?? '') === 'UPPER PRIMARY' ? 'selected' : '' ?>>UPPER PRIMARY</option>
+              <option value="NURSERY" <?= ($editItem['Class'] ?? '') === 'NURSERY' ? 'selected' : '' ?>>NURSERY</option>
+              <option value="CRECHE" <?= ($editItem['Class'] ?? '') === 'CRECHE' ? 'selected' : '' ?>>CRECHE</option>
+            </select>
+          </div>
           <div class="col-md-2">
             <input type="number" step="5" name="Price" class="form-control" placeholder="Price"
               value="<?= htmlspecialchars($editItem['Price'] ?? '') ?>" required>
@@ -152,7 +208,7 @@ $suppliers = $conn->query("SELECT SupplierID, SupplierName FROM Suppliers ORDER 
 
   <!-- Display Table -->
   <div class="card shadow">
-    <div class="card-body" style="background-color:#f0d8b0ff;">
+    <div class="card-body table-container" style="background-color:#f0d8b0ff;">
       <table class="table table-hover table-bordered align-middle" id="itemsTable">
         <thead class="table-dark">
           <tr>
@@ -201,7 +257,6 @@ $suppliers = $conn->query("SELECT SupplierID, SupplierName FROM Suppliers ORDER 
   </div>
 </div>
 
-<!-- Search Script -->
 <script>
 document.getElementById("searchInput").addEventListener("keyup", function() {
   let filter = this.value.toLowerCase();
@@ -213,46 +268,7 @@ document.getElementById("searchInput").addEventListener("keyup", function() {
 });
 </script>
 
-<style>
-body {
-  background: linear-gradient(135deg, #fac992ff, #fbe7bbff);
-  color: #333;
-  font-family: "Poppins", sans-serif;
-}
-
-h3 {
-  color: #000000ff;
-  text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
-}
-
-.table th {
-  background-color: #da9236ff !important;
-  color: #ebd4a3ff !important;
-  text-align: center;
-}
-
-.table-hover tbody tr:hover {
-  background-color: #e4cf88ff;
-}
-
-.form-control, .form-select {
-  border-radius: 10px;
-  padding: 10px;
-}
-
-.btn {
-  border-radius: 10px;
-  font-weight: 500;
-}
-
-#searchInput {
-  border-radius: 20px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-}
-
-#searchInput:focus {
-  box-shadow: 0 0 8px rgba(135, 87, 15, 0.84);
-}
-</style>
+</body>
+</html>
 
 <?php include __DIR__ . '/../includes/footer.php'; ?>

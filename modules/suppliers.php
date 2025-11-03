@@ -71,6 +71,56 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_id'])) {
 // --- READ ---
 $result = $conn->query("SELECT * FROM Suppliers ORDER BY SupplierName");
 ?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  
+<style>
+  body {
+    background: linear-gradient(135deg, #fac992ff, #fbe7bbff);
+    font-family: "Poppins", sans-serif;
+    color: #333;
+  }
+
+  .table {
+    background-color: #f0d8b0ff;
+    border-radius: 10px;
+    overflow: hidden;
+  }
+
+  .table th {
+    background-color: #da9236ff !important;
+    color: #fff5d1 !important;
+  }
+
+  .table-hover tbody tr:hover {
+    background-color: #ffe9b6;
+  }
+
+  .btn {
+    border-radius: 10px;
+    font-weight: 500;
+  }
+
+  .modal-content {
+    border-radius: 15px;
+    border: none;
+  }
+
+  #searchInput {
+    border-radius: 20px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  }
+
+  #searchInput:focus {
+    box-shadow: 0 0 8px rgba(135, 87, 15, 0.84);
+  }
+</style>
+</head>
+<body>
 
 <div class="container py-4">
   <div class="d-flex justify-content-between align-items-center mb-3">
@@ -258,46 +308,7 @@ $result = $conn->query("SELECT * FROM Suppliers ORDER BY SupplierName");
   });
 </script>
 
-<style>
-  body {
-    background: linear-gradient(135deg, #fac992ff, #fbe7bbff);
-    font-family: "Poppins", sans-serif;
-    color: #333;
-  }
-
-  .table {
-    background-color: #f0d8b0ff;
-    border-radius: 10px;
-    overflow: hidden;
-  }
-
-  .table th {
-    background-color: #da9236ff !important;
-    color: #fff5d1 !important;
-  }
-
-  .table-hover tbody tr:hover {
-    background-color: #ffe9b6;
-  }
-
-  .btn {
-    border-radius: 10px;
-    font-weight: 500;
-  }
-
-  .modal-content {
-    border-radius: 15px;
-    border: none;
-  }
-
-  #searchInput {
-    border-radius: 20px;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-  }
-
-  #searchInput:focus {
-    box-shadow: 0 0 8px rgba(135, 87, 15, 0.84);
-  }
-</style>
-
+  
+</body>
+</html>
 <?php include __DIR__ . '/../includes/footer.php'; ?>

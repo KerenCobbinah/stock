@@ -310,7 +310,11 @@ body {
   color: var(--text-dark);
   font-family: "Poppins", sans-serif;
 }
-
+.table-responsive{
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  width: 100%;
+}
 /* Headings */
 h2 {
   color: var(--text-dark);

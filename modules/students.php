@@ -126,6 +126,7 @@ $students = $conn->query("SELECT * FROM Students ORDER BY Class, LastName");
   <!-- Display Table -->
   <div class="card shadow">
     <div class="card-body bg-light">
+      <div class="table-container">
       <table class="table table-hover table-bordered align-middle" id="studentsTable">
         <thead>
           <tr>
@@ -192,13 +193,28 @@ document.getElementById("searchInput").addEventListener("keyup", function() {
     });
   });
 </script>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    
+</body>
+</html>
 <style>
 body {
   background: linear-gradient(135deg, #fbe8c7, #fff3da);
   color: #212529;
   font-family: "Poppins", sans-serif;
 }
-
+.table-container {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  width: 100%;
+}
 h3.fw-bold {
   color: #3d2b1f;
   font-size: 1.7rem;
